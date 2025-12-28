@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Change to repo root
+        run: cd $GITHUB_WORKSPACE
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
