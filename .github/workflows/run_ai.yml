@@ -1,33 +1,31 @@
-name: AI Trade Alerts
+name: AI Market Alerts
 
 on:
   schedule:
-    - cron: '35 16 * * 1-5'   # 9:35am PST
-    - cron: '30 20 * * 1-5'   # 12:30pm PST
-    - cron: '45 22 * * 1-5'   # 2:45pm PST
+    - cron: "0 16 * * *"   # 9am Pacific
+    - cron: "0 20 * * *"   # 1pm Pacific
+    - cron: "0 0 * * *"    # 5pm Pacific
   workflow_dispatch:
 
 jobs:
-  run-ai:
+  run-bot:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          pip install yfinance pandas numpy scikit-learn
+        run: pip install -r requirements.txt
 
-      - name: Run AI script
+      - name: Run bot
         env:
-          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          SMS_TO: ${{ secrets.SMS_TO }}
-        run: |
-          python ai_trade_alert.py
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          SMS_GATEWAY: ${{ secrets.SMS_GATEWAY }}
+        run: python bot.py
