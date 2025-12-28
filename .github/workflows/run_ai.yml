@@ -2,33 +2,25 @@ name: AI Market Alerts
 
 on:
   schedule:
-    - cron: "0 16 * * *"   # 9am Pacific
-    - cron: "0 20 * * *"   # 1pm Pacific
-    - cron: "0 0 * * *"    # 5pm Pacific
+    - cron: "0 16 * * *"
+    - cron: "0 20 * * *"
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-
-      - name: Change to repo root
-        run: cd $GITHUB_WORKSPACE
-
+          python-version: '3.12'
       - name: Install dependencies
-        run: pip install -r requirements.txt
-
+        run: pip install --upgrade pip && pip install -r requirements.txt
       - name: Run bot
+        run: python ./bot.py
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           SMS_GATEWAY: ${{ secrets.SMS_GATEWAY }}
-        run: python bot.py
